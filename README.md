@@ -38,6 +38,12 @@ That password is used for the source (the Mopidy publisher), the relay and
 the admin panel.  **The Mopidy app has to be configured with the same
 value**, otherwise the streams stay silent.
 
+## The landing page
+
+`https://<domain>/` shows a small page with the two links to the streams.
+It replaces the status page of Icecast, which is still there on the port of
+the server (`http://<domain>:<port>/`).
+
 ## Where to listen
 
 Once the Mopidy app is running and playing:

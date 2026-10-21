@@ -10,6 +10,13 @@
 The URLs are `https://<domain><path>/low.mp3` and
 `https://<domain><path>/high.ogg`, with `<path>` being `/icecast` by default.
 
+## The landing page
+
+The domain of the app (`https://<domain>/`) shows a small page with the two
+links to the streams.  It is written by the package to
+`/etc/icecast2/landing.html` and served by nginx; the status page of
+Icecast is still on the port of the server.
+
 ## The two ways to listen
 
 The streams are reachable in two ways, and both can be used at the same time:

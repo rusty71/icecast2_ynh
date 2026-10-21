@@ -26,7 +26,8 @@ get__streaming_password() {
 
 set__streaming_expose_port() {
     local address
-    if [ "$streaming_expose_port" = "true" ]; then
+    expose_port="$streaming_expose_port"
+    if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
         address="0.0.0.0"
     else
         address="127.0.0.1"
@@ -37,7 +38,7 @@ set__streaming_expose_port() {
     sed -i "s|<bind-address>[^<]*</bind-address>|<bind-address>$address</bind-address>|" \
         "$icecast_config"
 
-    if [ "$streaming_expose_port" = "true" ]; then
+    if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
         ynh_hide_warnings yunohost firewall allow --no-upnp TCP "$port"
     else
         ynh_hide_warnings yunohost firewall disallow TCP "$port" \

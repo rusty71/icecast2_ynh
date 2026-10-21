@@ -68,11 +68,21 @@ _icecast_disable_debian_service() {
     fi
 }
 
+_icecast_expose_port_enabled() {
+    # Whether the streaming port is exposed.  YunoHost passes the answer to a
+    # boolean question as "1" or "0", the config panel uses "true" and
+    # "false", so all of them are accepted here.
+    case "${expose_port:-}" in
+        1|true|True|TRUE|yes|on) echo "true" ;;
+        *) echo "false" ;;
+    esac
+}
+
 _icecast_bind_address() {
     # The address Icecast listens on.  With 127.0.0.1 the streams are only
     # reachable through the nginx reverse proxy, with 0.0.0.0 the port is
     # open as well and the listeners can connect directly.
-    if [ "${expose_port:-false}" = "true" ]; then
+    if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
         echo "0.0.0.0"
     else
         echo "127.0.0.1"
@@ -97,7 +107,7 @@ _icecast_current_bind_address() {
 
 _icecast_firewall() {
     # Open the port in the firewall when it is exposed, close it otherwise.
-    if [ "${expose_port:-false}" = "true" ]; then
+    if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
         ynh_print_info "Opening the port $port in the firewall..."
         ynh_hide_warnings yunohost firewall allow --no-upnp TCP "$port"
     else

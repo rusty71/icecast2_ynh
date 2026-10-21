@@ -68,6 +68,14 @@ _icecast_disable_debian_service() {
     fi
 }
 
+_icecast_deploy_landing_page() {
+    # The page that the app shows on its domain: it links to the two
+    # streams on the port of the server.
+    mkdir -p "$install_dir/web"
+    ynh_config_add --template="landing.html" --destination="$install_dir/web/landing.html"
+    chmod 644 "$install_dir/web/landing.html"
+}
+
 _icecast_expose_port_enabled() {
     # Whether the streaming port is exposed.  YunoHost passes the answer to a
     # boolean question as "1" or "0", the config panel uses "true" and

@@ -23,6 +23,8 @@ ynh_script_progression "Preparing the mime types..."
 
 _icecast_prepare_mime_types
 
+_icecast_deploy_landing_page
+
 ynh_script_progression "Generating the fallback streams..."
 
 _icecast_make_fallbacks

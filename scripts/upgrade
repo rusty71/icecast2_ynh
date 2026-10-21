@@ -25,6 +25,8 @@ bind_address="$(_icecast_bind_address)"
 
 _icecast_prepare_mime_types
 
+_icecast_deploy_landing_page
+
 _icecast_make_fallbacks
 
 ynh_config_add --template="icecast.xml" --destination="/etc/icecast2/icecast.xml"

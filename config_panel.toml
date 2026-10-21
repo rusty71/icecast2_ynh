@@ -5,7 +5,7 @@ version = "1.0"
     [main.streaming]
     name = "Streaming"
 
-        [main.streaming.expose_port]
+        [main.streaming.streaming_expose_port]
         ask.en = "Open the streaming port on the server?"
         ask.fr = "Ouvrir le port de streaming sur le serveur ?"
         help.en = "When enabled, the listeners can connect directly to the port of the server instead of going through the nginx reverse proxy."
@@ -13,7 +13,7 @@ version = "1.0"
         type = "boolean"
         bind = "null"
 
-        [main.streaming.password]
+        [main.streaming.icecast_password]
         ask.en = "Password of the Icecast admin (and of the streaming source)"
         ask.fr = "Mot de passe de l'administrateur Icecast (et de la source de streaming)"
         help.en = "The Mopidy app has to use the same password. Leave the field empty to keep the current one."

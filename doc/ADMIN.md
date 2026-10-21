@@ -16,13 +16,21 @@ The streams are reachable in two ways, and both can be used at the same time:
 
 | | URL |
 |---|---|
+| **Directly on the port** | `http://<domain>:<port>/low.mp3` |
 | Through the nginx reverse proxy | `https://<domain><path>/low.mp3` |
-| Directly on the port | `http://<domain>:<port>/low.mp3` |
 
-The direct port is only open when the **expose_port** setting is on (the
-"Open the streaming port on the server?" question at install time, or the
-setting of the config panel).  Icecast then listens on `0.0.0.0` instead of
-`127.0.0.1`, and the port is opened in the firewall.
+The direct port is the one to use for listening: it goes straight to
+Icecast, without the reverse proxy in between.  It is open when the
+**expose_port** setting is on (the "Open the streaming port on the
+server?" question at install time, or the setting of the config panel).
+Icecast then listens on `::` (every interface) instead of `::1`, and the
+port is opened in the firewall.
+
+The address is `::` and not `0.0.0.0`, so the server answers on its IPv6
+address as well: the name of the domain resolves to it, and a client that
+tries IPv6 first would otherwise be refused.  As long as
+`net.ipv6.bindv6only` is 0 (the default), the socket takes the IPv4
+connections too.
 
 ```bash
 yunohost firewall list | grep -A 2 "$port"

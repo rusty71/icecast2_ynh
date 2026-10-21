@@ -42,11 +42,11 @@ value**, otherwise the streams stay silent.
 
 Once the Mopidy app is running and playing:
 
-| Stream | Through the reverse proxy | Directly on the port |
+| Stream | Directly on the port | Through the reverse proxy |
 |---|---|---|
-| Low resolution (MP3) | `https://music.example.org/icecast/low.mp3` | `http://music.example.org:8000/low.mp3` |
-| High resolution (FLAC) | `https://music.example.org/icecast/high.ogg` | `http://music.example.org:8000/high.ogg` |
-| Status page | `https://music.example.org/icecast/` | `http://music.example.org:8000/` |
+| Low resolution (MP3) | `http://music.example.org:8000/low.mp3` | `https://music.example.org/icecast/low.mp3` |
+| High resolution (FLAC) | `http://music.example.org:8000/high.ogg` | `https://music.example.org/icecast/high.ogg` |
+| Status page | `http://music.example.org:8000/` | `https://music.example.org/icecast/` |
 
 The second column is only reachable when the port is opened
 (**"Open the streaming port on the server?"** at install time, or the
@@ -58,10 +58,9 @@ and long timeouts, which is what a long-lived audio stream needs, and the
 publisher connects to Icecast directly on `127.0.0.1` in either case - only
 the *listeners* go through nginx.
 
-The direct port is the way to go when a player has trouble with the stream
-through the proxy, or when the listeners are on the local network.  The
-reverse proxy is the way to go when the streams have to be reachable over
-HTTPS.
+The direct port is the way to go: the stream goes straight to Icecast,
+without the reverse proxy in between.  The reverse proxy is the way to go
+when the streams have to be reachable over HTTPS.
 
 The admin panel of Icecast is on the status page (the `admin` user and the
 password given at install time).

@@ -13,13 +13,14 @@ The URLs are `https://<domain><path>/low.mp3` and
 ## The publisher password
 
 The Mopidy app publishes on the mounts as the Icecast user `source`, with the
-password that was given at install time.  If you change it here, change it in
-the Mopidy app as well, otherwise the streams stay silent.
+password that was given at install time.  The same password is used for the
+relay and for the admin panel.
 
-The password is stored in the application settings:
+If you change it here, change it in the Mopidy app as well, otherwise the
+streams stay silent.  The password of the Mopidy app is in its settings:
 
 ```bash
-yunohost app setting mopidy source_password
+yunohost app setting mopidy icecast_password
 ```
 
 ## The fallback streams

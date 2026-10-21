@@ -31,12 +31,12 @@ yunohost app install icecast2 \
     --domain="music.example.org" \
     --path="/icecast" \
     --admin="admin" \
-    --password="<the icecast admin password>" \
-    --source_password="<the publisher password>"
+    --password="<the icecast password>"
 ```
 
-The `source_password` is the password the Mopidy app uses to publish on the
-mounts.  **The Mopidy app has to be configured with the same value.**
+That password is used for the source (the Mopidy publisher), the relay and
+the admin panel.  **The Mopidy app has to be configured with the same
+value**, otherwise the streams stay silent.
 
 ## Where to listen
 

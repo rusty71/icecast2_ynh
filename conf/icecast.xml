@@ -80,6 +80,18 @@
              the player into an https one, and the port of Icecast has no
              certificate.  The status page stays on /status.xsl. -->
         <alias source="/" destination="/landing.html"/>
+
+        <!-- The port speaks https, with the certificate of the domain.
+             A browser that insists on https ("HTTPS-First mode") would
+             otherwise try to reach the port over https and hang, because
+             there is no certificate for it.  The certificate is for the
+             name of the domain, not for the port, so it works either way.
+
+             Icecast 2.4 reads the private key from the same file as the
+             certificate, so the package puts the two of them together in
+             /etc/icecast2/icecast.pem.  The service reads it as a member
+             of the group ssl-cert. -->
+        <ssl-certificate>/etc/icecast2/icecast.pem</ssl-certificate>
     </paths>
 
     <logging>
@@ -109,22 +121,5 @@
         <fallback-override>1</fallback-override>
     </mount>
 
-
-    <security>
-        <chroot>false</chroot>
-
-        <!-- The port speaks https, with the certificate of the domain.
-             A browser that insists on https ("HTTPS-First mode") would
-             otherwise try to reach the port over https and hang, because
-             there is no certificate for it.  The certificate is for the
-             name of the domain, not for the port, so it works either way.
-             The service reads the key as a member of the group ssl-cert. -->
-        <tls-context>
-            <!-- Icecast 2.4 reads the private key from the same file as
-                 the certificate, so the package puts the two of them
-                 together in /etc/icecast2/icecast.pem. -->
-            <ssl-certificate>/etc/icecast2/icecast.pem</ssl-certificate>
-        </tls-context>
-    </security>
 
 </icecast>

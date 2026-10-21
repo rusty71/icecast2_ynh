@@ -70,10 +70,10 @@ _icecast_disable_debian_service() {
 
 _icecast_deploy_landing_page() {
     # The page that the app shows on its domain: it links to the two
-    # streams on the port of the server.
-    mkdir -p "$install_dir/web"
-    ynh_config_add --template="landing.html" --destination="$install_dir/web/landing.html"
-    chmod 644 "$install_dir/web/landing.html"
+    # streams on the port of the server.  It lives next to the
+    # configuration of Icecast, this app has no directory of its own.
+    ynh_config_add --template="landing.html" --destination="/etc/icecast2/landing.html"
+    chmod 644 "/etc/icecast2/landing.html"
 }
 
 _icecast_expose_port_enabled() {

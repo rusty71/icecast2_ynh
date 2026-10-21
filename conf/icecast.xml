@@ -16,6 +16,13 @@
 
     <listen-socket>
         <port>__PORT__</port>
+        <!-- The port speaks https, with the certificate of the domain.
+             A browser that insists on https ("HTTPS-First mode") would
+             otherwise try to reach the port over https and hang, because
+             there is no certificate for it.  The certificate is for the
+             name of the domain, not for the port, so it works either way.
+             The service reads the key as a member of the group ssl-cert. -->
+        <ssl>1</ssl>
         <!-- 127.0.0.1: the streams are only reachable through the nginx
              reverse proxy.  0.0.0.0: the port is open as well, for listeners
              that connect directly (see the "expose_port" setting). -->

@@ -47,11 +47,11 @@ The page is served by Icecast itself, so the player talks to the streams
 directly and not through the reverse proxy of the domain.  The address of
 the player is relative, so it keeps the protocol of the page.
 
-Below the player are the two links to the streams.  They hand the stream to
-a music player: on a phone to the system, which asks which application
-should play it, on a computer to VLC.  Next to every link is a "play here"
-link that plays the stream in the browser, and a button that copies its
-address, to paste it into the player of your choice.
+Below the player are the two links to the streams.  They are playlists
+(`.m3u`), which every player understands, and the browser hands them to the
+application of the user.  Next to every link is a "play here" link that
+plays the stream in the browser, and a button that copies its address, to
+paste it into the player of your choice.
 
 The status page of Icecast is still on the port of the server
 (`https://<domain>:<port>/status.xsl`).

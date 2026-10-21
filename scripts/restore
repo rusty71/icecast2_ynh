@@ -30,6 +30,11 @@ ynh_script_progression "Reloading NGINX web server and $app's service..."
 
 _icecast_make_fallbacks
 
+# The port is opened again when the restored configuration listens on every
+# interface.
+expose_port="$(_icecast_current_bind_address)"
+_icecast_firewall
+
 ynh_systemctl --service="$app" --action="start" --log_path="systemd"
 
 ynh_systemctl --service=nginx --action=reload

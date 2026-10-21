@@ -1,0 +1,87 @@
+#!/bin/bash
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+ynh_abort_if_errors
+
+icecast_config="$icecast_config_file"
+
+#=================================================
+# GETTERS
+#=================================================
+
+get__streaming_expose_port() {
+    _icecast_current_bind_address
+}
+
+get__streaming_password() {
+    # The password is a secret: it can be written, but not read back.
+    echo ""
+}
+
+#=================================================
+# SETTERS
+#=================================================
+
+set__streaming_expose_port() {
+    local address
+    if [ "$streaming_expose_port" = "true" ]; then
+        address="0.0.0.0"
+    else
+        address="127.0.0.1"
+    fi
+
+    ynh_print_info "Listening on $address:$port"
+
+    sed -i "s|<bind-address>[^<]*</bind-address>|<bind-address>$address</bind-address>|" \
+        "$icecast_config"
+
+    if [ "$streaming_expose_port" = "true" ]; then
+        ynh_hide_warnings yunohost firewall allow --no-upnp TCP "$port"
+    else
+        ynh_hide_warnings yunohost firewall disallow TCP "$port" \
+            || ynh_print_warn "Could not close the port $port in the firewall"
+    fi
+}
+
+set__streaming_password() {
+    # An empty field means "keep the current password".
+    if [ -z "$streaming_password" ]; then
+        ynh_print_info "The Icecast password was left unchanged"
+        return
+    fi
+
+    ynh_print_info "Updating the Icecast password"
+
+    sed -i "s|<source-password>[^<]*</source-password>|<source-password>$streaming_password</source-password>|" \
+        "$icecast_config"
+    sed -i "s|<relay-password>[^<]*</relay-password>|<relay-password>$streaming_password</relay-password>|" \
+        "$icecast_config"
+    sed -i "s|<admin-password>[^<]*</admin-password>|<admin-password>$streaming_password</admin-password>|" \
+        "$icecast_config"
+
+    ynh_print_warn "Change the same password in the Mopidy app, or the streams will stay silent."
+}
+
+#=================================================
+# ACTIONS
+#=================================================
+
+run__streaming_restart() {
+    ynh_print_info "Restarting Icecast..."
+    ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
+}
+
+#=================================================
+# RESTART WHEN SOMETHING CHANGED
+#=================================================
+
+ynh_app_config_apply() {
+    _ynh_app_config_apply
+
+    ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
+}
+
+# Keep this last line
+ynh_app_config_run $1

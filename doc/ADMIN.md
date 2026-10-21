@@ -10,6 +10,35 @@
 The URLs are `https://<domain><path>/low.mp3` and
 `https://<domain><path>/high.ogg`, with `<path>` being `/icecast` by default.
 
+## The two ways to listen
+
+The streams are reachable in two ways, and both can be used at the same time:
+
+| | URL |
+|---|---|
+| Through the nginx reverse proxy | `https://<domain><path>/low.mp3` |
+| Directly on the port | `http://<domain>:<port>/low.mp3` |
+
+The direct port is only open when the **expose_port** setting is on (the
+"Open the streaming port on the server?" question at install time, or the
+setting of the config panel).  Icecast then listens on `0.0.0.0` instead of
+`127.0.0.1`, and the port is opened in the firewall.
+
+```bash
+yunohost firewall list | grep -A 2 "$port"
+```
+
+To close it again, turn the setting off: the firewall rule is removed and
+Icecast goes back to `127.0.0.1`.
+
+**The publisher always connects directly** to `127.0.0.1:<port>`, never
+through nginx - that is what keeps the Icecast session open across the track
+changes.
+
+If a player has trouble with the stream through the proxy, open the port and
+point it at the direct URL.  If the streams have to be reachable over HTTPS,
+keep the proxy.
+
 ## The publisher password
 
 The Mopidy app publishes on the mounts as the Icecast user `source`, with the

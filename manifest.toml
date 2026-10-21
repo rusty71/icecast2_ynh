@@ -50,6 +50,12 @@ ram.runtime = "50M"
     help.en = "The Mopidy app has to use the same password to publish on the mounts."
     type = "password"
 
+    [install.expose_port]
+    ask.en = "Open the streaming port on the server?"
+    help.en = "When enabled, the listeners can connect directly to the port of the server instead of going through the nginx reverse proxy."
+    type = "boolean"
+    default = false
+
 [resources]
 
     [resources.system_user]

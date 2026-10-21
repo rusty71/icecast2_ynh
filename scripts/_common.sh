@@ -7,6 +7,9 @@
 # The formats of the two mounts.  The publisher of the Mopidy app produces
 # exactly these, and the fallback streams have to match them: Icecast only
 # hands a mount over to its fallback when the content types are the same.
+# The configuration file of Icecast.
+icecast_config_file="/etc/icecast2/icecast.xml"
+
 MP3_RATE=48000
 OGG_RATE=96000
 MP3_BITRATE=128k
@@ -62,5 +65,43 @@ _icecast_disable_debian_service() {
     if systemctl list-unit-files icecast2.service >/dev/null 2>&1; then
         systemctl stop icecast2.service 2>/dev/null || true
         systemctl disable icecast2.service 2>/dev/null || true
+    fi
+}
+
+_icecast_bind_address() {
+    # The address Icecast listens on.  With 127.0.0.1 the streams are only
+    # reachable through the nginx reverse proxy, with 0.0.0.0 the port is
+    # open as well and the listeners can connect directly.
+    if [ "${expose_port:-false}" = "true" ]; then
+        echo "0.0.0.0"
+    else
+        echo "127.0.0.1"
+    fi
+}
+
+_icecast_current_bind_address() {
+    # The address the running configuration uses.
+    if [ -f "$icecast_config_file" ]; then
+        local address
+        address="$(sed -n 's|.*<bind-address>\([^<]*\)</bind-address>.*|\1|p' \
+            "$icecast_config_file" | head -1)"
+        if [ "$address" = "0.0.0.0" ]; then
+            echo "true"
+        else
+            echo "false"
+        fi
+    else
+        echo "false"
+    fi
+}
+
+_icecast_firewall() {
+    # Open the port in the firewall when it is exposed, close it otherwise.
+    if [ "${expose_port:-false}" = "true" ]; then
+        ynh_print_info "Opening the port $port in the firewall..."
+        ynh_hide_warnings yunohost firewall allow --no-upnp TCP "$port"
+    else
+        ynh_hide_warnings yunohost firewall disallow TCP "$port" \
+            || ynh_print_warn "Could not close the port $port in the firewall"
     fi
 }

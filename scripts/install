@@ -7,6 +7,10 @@ source /usr/share/yunohost/helpers
 # INITIALIZE AND STORE SETTINGS
 #=================================================
 
+expose_port="${expose_port:-false}"
+bind_address="$(_icecast_bind_address)"
+
+ynh_app_setting_set --key=expose_port --value="$expose_port"
 #=================================================
 # APP "BUILD" (DEPLOYING SOURCES, VENV, COMPILING ETC)
 #=================================================
@@ -38,6 +42,8 @@ chown "$app:$app" "/etc/icecast2/icecast.xml"
 ynh_script_progression "Adding system configurations related to $app..."
 
 _icecast_disable_debian_service
+
+_icecast_firewall
 
 ynh_config_add_nginx
 

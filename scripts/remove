@@ -24,6 +24,11 @@ ynh_config_remove_nginx
 
 ynh_safe_rm "/etc/icecast2/mime.types.ynh"
 
+# The port is only closed when this app is the one that opened it.
+if [ "$(_icecast_current_bind_address)" = "true" ]; then
+    ynh_hide_warnings yunohost firewall disallow TCP "$port" || true
+fi
+
 #=================================================
 # END OF SCRIPT
 #=================================================

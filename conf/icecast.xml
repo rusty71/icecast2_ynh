@@ -16,10 +16,10 @@
 
     <listen-socket>
         <port>__PORT__</port>
-        <!-- Listen on localhost only: the streams are published through the
-             nginx reverse proxy.  Change to 0.0.0.0 to allow direct
-             connections on the port. -->
-        <bind-address>127.0.0.1</bind-address>
+        <!-- 127.0.0.1: the streams are only reachable through the nginx
+             reverse proxy.  0.0.0.0: the port is open as well, for listeners
+             that connect directly (see the "expose_port" setting). -->
+        <bind-address>__BIND_ADDRESS__</bind-address>
     </listen-socket>
 
     <http-headers>

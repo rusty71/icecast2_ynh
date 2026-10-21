@@ -47,6 +47,12 @@ The page is served by Icecast itself, so the player talks to the streams
 directly and not through the reverse proxy of the domain.  The address of
 the player is relative, so it keeps the protocol of the page.
 
+Below the player are the two links to the streams.  On a phone they are
+handed to the system, which asks which application should play the stream.
+On a computer there is a button next to every link that copies the address,
+to paste it into the player of your choice: a browser has no way of
+handing a live stream to an application by itself.
+
 The status page of Icecast is still on the port of the server
 (`https://<domain>:<port>/status.xsl`).
 

@@ -37,6 +37,7 @@ ynh_script_progression "Reloading NGINX web server and $app's service..."
 
 _icecast_make_fallbacks
 
+_icecast_make_certificate
 _icecast_deploy_landing_page
 
 # The port is opened again when the restored configuration listens on every

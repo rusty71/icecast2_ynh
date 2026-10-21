@@ -22,7 +22,7 @@
              there is no certificate for it.  The certificate is for the
              name of the domain, not for the port, so it works either way.
              The service reads the key as a member of the group ssl-cert. -->
-        <tls>1</tls>
+        <ssl>1</ssl>
         <!-- 127.0.0.1: the streams are only reachable through the nginx
              reverse proxy.  0.0.0.0: the port is open as well, for listeners
              that connect directly (see the "expose_port" setting). -->
@@ -120,8 +120,10 @@
              name of the domain, not for the port, so it works either way.
              The service reads the key as a member of the group ssl-cert. -->
         <tls-context>
-            <tls-certificate>/etc/yunohost/certs/__DOMAIN__/crt.pem</tls-certificate>
-            <tls-key>/etc/yunohost/certs/__DOMAIN__/key.pem</tls-key>
+            <!-- Icecast 2.4 reads the private key from the same file as
+                 the certificate, so the package puts the two of them
+                 together in /etc/icecast2/icecast.pem. -->
+            <ssl-certificate>/etc/icecast2/icecast.pem</ssl-certificate>
         </tls-context>
     </security>
 

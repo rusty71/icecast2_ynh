@@ -68,6 +68,24 @@ _icecast_disable_debian_service() {
     fi
 }
 
+_icecast_make_certificate() {
+    # Icecast 2.4 reads the private key from the same file as the
+    # certificate, so the certificate of the domain and its key are put
+    # together here.  The file is only readable by the group ssl-cert, which
+    # the service is a member of.
+    local certs="/etc/yunohost/certs/$domain"
+    local target="/etc/icecast2/icecast.pem"
+
+    if [ ! -f "$certs/crt.pem" ] || [ ! -f "$certs/key.pem" ]; then
+        ynh_print_warn "No certificate for $domain, the port stays plain http"
+        return 0
+    fi
+
+    cat "$certs/crt.pem" "$certs/key.pem" > "$target"
+    chown root:ssl-cert "$target"
+    chmod 640 "$target"
+}
+
 _icecast_deploy_landing_page() {
     # The page with the player.  It is served by Icecast itself, on its
     # port, so the player talks to the streams directly and not through

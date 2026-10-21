@@ -100,11 +100,10 @@ _icecast_current_bind_address() {
         local address
         address="$(sed -n 's|.*<bind-address>\([^<]*\)</bind-address>.*|\1|p' \
             "$icecast_config_file" | head -1)"
-        if [ "$address" = "::" ]; then
-            echo "true"
-        else
-            echo "false"
-        fi
+        case "$address" in
+            "::"|"0.0.0.0") echo "true" ;;
+            *) echo "false" ;;
+        esac
     else
         echo "false"
     fi

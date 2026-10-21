@@ -69,11 +69,15 @@ _icecast_disable_debian_service() {
 }
 
 _icecast_deploy_landing_page() {
-    # The page that the app shows on its domain: it links to the two
-    # streams on the port of the server.  It lives next to the
-    # configuration of Icecast, this app has no directory of its own.
-    ynh_config_add --template="landing.html" --destination="/etc/icecast2/landing.html"
-    chmod 644 "/etc/icecast2/landing.html"
+    # The page with the player.  It is served by Icecast itself, on its
+    # port: the reverse proxy of the domain sends
+    # "upgrade-insecure-requests", which would turn the address of the
+    # player into an https one, and the port has no certificate.
+    local webroot="/usr/share/icecast2/web"
+
+    mkdir -p "$webroot"
+    ynh_config_add --template="landing.html" --destination="$webroot/landing.html"
+    chmod 644 "$webroot/landing.html"
 }
 
 _icecast_expose_port_enabled() {

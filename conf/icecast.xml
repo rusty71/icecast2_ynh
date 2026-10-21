@@ -67,7 +67,12 @@
         <webroot>/usr/share/icecast2/web</webroot>
         <adminroot>/usr/share/icecast2/admin</adminroot>
         <pidfile>/var/run/__APP__/icecast.pid</pidfile>
-        <alias source="/" destination="/status.xsl"/>
+        <!-- The landing page with the player.  It has to be served over
+             plain HTTP: the reverse proxy of the domain sends
+             "upgrade-insecure-requests", which would turn the address of
+             the player into an https one, and the port of Icecast has no
+             certificate.  The status page stays on /status.xsl. -->
+        <alias source="/" destination="/landing.html"/>
     </paths>
 
     <logging>

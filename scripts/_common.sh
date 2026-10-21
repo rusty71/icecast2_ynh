@@ -26,7 +26,7 @@ _icecast_prepare_mime_types() {
     if [ -f "$source" ]; then
         cp -f "$source" "$destination"
     else
-        printf 'audio/mpeg mp3 mpga\napplication/ogg oga ogg opus spx\naudio/x-flac flac\n' > "$destination"
+        printf 'audio/mpeg mp3 mpga\napplication/ogg oga ogg opus spx\naudio/x-flac flac\naudio/x-mpegurl m3u\napplication/vnd.apple.mpegurl m3u\n' > "$destination"
     fi
 
     # Map .ogg to application/ogg
@@ -84,6 +84,31 @@ _icecast_make_certificate() {
     cat "$certs/crt.pem" "$certs/key.pem" > "$target"
     chown root:ssl-cert "$target"
     chmod 640 "$target"
+}
+
+_icecast_make_playlists() {
+    # A playlist for every stream.  A player that opens one of them plays
+    # the stream, and a browser hands the file to the application of the
+    # user.
+    local webroot="/usr/share/icecast2/web"
+    local port_public="${public_port:-$port}"
+    local base="https://$domain:$port_public"
+
+    mkdir -p "$webroot"
+
+    cat > "$webroot/low.m3u" <<EOF
+#EXTM3U
+#EXTINF:-1,Low resolution (MP3)
+$base/low.mp3
+EOF
+
+    cat > "$webroot/high.m3u" <<EOF
+#EXTM3U
+#EXTINF:-1,High resolution (Ogg FLAC)
+$base/high.ogg
+EOF
+
+    chmod 644 "$webroot/low.m3u" "$webroot/high.m3u"
 }
 
 _icecast_deploy_landing_page() {

@@ -13,15 +13,22 @@ The URLs are `https://<domain><path>/low.mp3` and
 ## The landing page and the player
 
 The domain of the app (`https://<domain>/`) sends the visitor to
-`http://<domain>:<port>/`, where Icecast serves a small page with a player
+`https://<domain>:<port>/`, where Icecast serves a small page with a player
 and the two links to the streams.
 
 The page is written by the package to `/usr/share/icecast2/web/landing.html`
-and the alias of `/` in `icecast.xml` points at it.  It has to be served
-over plain HTTP: the reverse proxy sends `upgrade-insecure-requests`, which
-would turn the address of the player into an https one, and the port has no
-certificate.  The status page of Icecast is still on
-`http://<domain>:<port>/status.xsl`.
+and the alias of `/` in `icecast.xml` points at it.  The status page of
+Icecast is still on `https://<domain>:<port>/status.xsl`.
+
+**The port speaks https**, with the certificate of the domain.  A browser
+that insists on https ("HTTPS-First mode") tries to reach the port over
+https anyway, and without a certificate for it the connection would just
+hang.  Icecast 2.4 reads the private key from the same file as the
+certificate, so the package puts the two of them together in
+`/etc/icecast2/icecast.pem`, readable by the group `ssl-cert`.
+
+> After a renewal of the certificate of the domain the file has to be
+> made again: `yunohost app upgrade icecast2` does that.
 
 ## The two ways to listen
 
@@ -29,7 +36,7 @@ The streams are reachable in two ways, and both can be used at the same time:
 
 | | URL |
 |---|---|
-| **Directly on the port** | `http://<domain>:<port>/low.mp3` |
+| **Directly on the port** | `https://<domain>:<port>/low.mp3` |
 | Through the nginx reverse proxy | `https://<domain><path>/low.mp3` |
 
 The direct port is the one to use for listening: it goes straight to
@@ -38,6 +45,10 @@ Icecast, without the reverse proxy in between.  It is open when the
 server?" question at install time, or the setting of the config panel).
 Icecast then listens on `::` (every interface) instead of `::1`, and the
 port is opened in the firewall.
+
+The **public port** is the port that is forwarded to the server from the
+outside.  It is not necessarily the port of the service: the setting in the
+config panel says which one the addresses of the streams use.
 
 The address is `::` and not `0.0.0.0`, so the server answers on its IPv6
 address as well: the name of the domain resolves to it, and a client that

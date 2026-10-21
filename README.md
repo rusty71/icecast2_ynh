@@ -40,18 +40,15 @@ value**, otherwise the streams stay silent.
 
 ## The landing page and the player
 
-`https://<domain>/` sends the visitor to `http://<domain>:<port>/`, where
+`https://<domain>/` sends the visitor to `https://<domain>:<port>/`, where
 Icecast serves a small page with a player and the two links to the streams.
 
-The player has to live on a page that is served over plain HTTP: the
-reverse proxy of the domain sends `Content-Security-Policy:
-upgrade-insecure-requests`, which turns an `http://` audio source into an
-`https://` one - and the port of Icecast has no certificate, so the player
-would not play at all.  The page is therefore served by Icecast itself, and
-the address of the player is relative, so it keeps the protocol of the page.
+The page is served by Icecast itself, so the player talks to the streams
+directly and not through the reverse proxy of the domain.  The address of
+the player is relative, so it keeps the protocol of the page.
 
 The status page of Icecast is still on the port of the server
-(`http://<domain>:<port>/status.xsl`).
+(`https://<domain>:<port>/status.xsl`).
 
 ## Where to listen
 
@@ -59,9 +56,13 @@ Once the Mopidy app is running and playing:
 
 | Stream | Directly on the port | Through the reverse proxy |
 |---|---|---|
-| Low resolution (MP3) | `http://music.example.org:8000/low.mp3` | `https://music.example.org/icecast/low.mp3` |
-| High resolution (FLAC) | `http://music.example.org:8000/high.ogg` | `https://music.example.org/icecast/high.ogg` |
-| Status page | `http://music.example.org:8000/` | `https://music.example.org/icecast/` |
+| Low resolution (MP3) | `https://music.example.org:8000/low.mp3` | `https://music.example.org/icecast/low.mp3` |
+| High resolution (FLAC) | `https://music.example.org:8000/high.ogg` | `https://music.example.org/icecast/high.ogg` |
+| Status page | `https://music.example.org:8000/status.xsl` | `https://music.example.org/icecast/status.xsl` |
+
+The port speaks https, with the certificate of the domain.  A browser that
+insists on https would try to reach the port over https anyway, and without
+a certificate for it the connection would just hang.
 
 The second column is only reachable when the port is opened
 (**"Open the streaming port on the server?"** at install time, or the

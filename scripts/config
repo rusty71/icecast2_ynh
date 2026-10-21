@@ -35,9 +35,9 @@ set__streaming_expose_port() {
     local address
     expose_port="$streaming_expose_port"
     if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
-        address="0.0.0.0"
+        address="::"
     else
-        address="127.0.0.1"
+        address="::1"
     fi
 
     ynh_print_info "Listening on $address:$port"

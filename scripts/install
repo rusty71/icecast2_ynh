@@ -7,6 +7,10 @@ source /usr/share/yunohost/helpers
 # INITIALIZE AND STORE SETTINGS
 #=================================================
 
+# The answers to a password question are not kept in the settings of the
+# app, so the password is stored explicitly: the upgrade needs it to write
+# the configuration file.
+ynh_app_setting_set --key=password --value="$password"
 expose_port="${expose_port:-false}"
 bind_address="$(_icecast_bind_address)"
 

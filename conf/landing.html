@@ -40,7 +40,8 @@
     padding: 0.35rem 0.5rem;
   }
   .row { align-items: baseline; display: flex; flex-wrap: wrap; gap: 0.6rem; }
-  .copy, .open {
+  .plain { font-size: 0.85rem; opacity: 0.75; }
+  .copy {
     background: transparent;
     border: 1px solid rgba(128, 128, 128, 0.5);
     border-radius: 0.35rem;
@@ -69,7 +70,7 @@
   <li>
     <div class="row">
       <a href="/low.mp3" data-stream="/low.mp3">Low resolution (MP3)</a>
-      <button class="open" data-open="/low.mp3">open in an app</button>
+      <a class="plain" href="/low.mp3" data-plain="/low.mp3">play here</a>
       <button class="copy" data-copy="/low.mp3" title="Copy the address">copy</button>
     </div>
     <p>MP3, 128 kbps, 48 kHz stereo &mdash; for mobile and slow connections.</p>
@@ -77,7 +78,7 @@
   <li>
     <div class="row">
       <a href="/high.ogg" data-stream="/high.ogg">High resolution (Ogg FLAC)</a>
-      <button class="open" data-open="/high.ogg">open in an app</button>
+      <a class="plain" href="/high.ogg" data-plain="/high.ogg">play here</a>
       <button class="copy" data-copy="/high.ogg" title="Copy the address">copy</button>
     </div>
     <p>Lossless, up to 24-bit/96 kHz, straight from Qobuz.</p>
@@ -86,8 +87,9 @@
 
 <p class="note">
   The streams are served over https on port __PUBLIC_PORT__.<br>
-  "open in an app" hands the stream to a music player: on a phone to the
-  system, on a computer to VLC.  "copy" puts the address on the clipboard,
+  The links hand the stream to a music player: on a phone to the system,
+  which asks which application should play it, on a computer to VLC.  "play
+  here" plays it in the browser, "copy" puts the address on the clipboard,
   for the player of your choice.
 </p>
 
@@ -114,30 +116,28 @@
       return window.location.origin + path;
     }
 
-    // Hand the stream to a music player.
-    function openExternally(path) {
+    // The address of a stream for a music player: the system of the phone
+    // asks which application should play it, on a computer the scheme of
+    // VLC is used.
+    function externalAddress(path) {
       var url = address(path);
 
       if (android) {
-        // The system of the phone asks which application should play it.
         // The browser plays it when no application wants it.
-        window.location.href = 'intent://' + host + path
+        return 'intent://' + host + path
           + '#Intent;scheme=https;S.browser_fallback_url='
           + encodeURIComponent(url) + ';end';
-        return;
       }
 
-      // On a computer the scheme of the player is used: vlc:// is the one
-      // of VLC, which is what most people have.
-      window.location.href = 'vlc://' + host + path;
+      return 'vlc://' + host + path;
     }
 
+    // The links below the player hand the stream to an application, the
+    // ones marked "play here" play it in the browser.
     Array.prototype.forEach.call(
-      document.querySelectorAll('button[data-open]'),
-      function (button) {
-        button.addEventListener('click', function () {
-          openExternally(button.getAttribute('data-open'));
-        });
+      document.querySelectorAll('a[data-stream]'),
+      function (link) {
+        link.setAttribute('href', externalAddress(link.getAttribute('data-stream')));
       }
     );
 

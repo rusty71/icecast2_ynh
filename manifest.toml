@@ -7,7 +7,7 @@ name = "Icecast2"
 description.en = "Streaming server for the Mopidy + Qobuz stack (MP3 and lossless FLAC mounts)"
 description.fr = "Serveur de streaming pour la pile Mopidy + Qobuz (flux MP3 et FLAC lossless)"
 
-version = "2.4.4~ynh16"
+version = "2.4.4~ynh17"
 
 maintainers = ["rusty71"]
 

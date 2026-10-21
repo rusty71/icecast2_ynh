@@ -80,12 +80,17 @@ _icecast_expose_port_enabled() {
 
 _icecast_bind_address() {
     # The address Icecast listens on.  With 127.0.0.1 the streams are only
-    # reachable through the nginx reverse proxy, with 0.0.0.0 the port is
-    # open as well and the listeners can connect directly.
+    # reachable through the nginx reverse proxy, with :: the port is open as
+    # well and the listeners can connect directly.
+    #
+    # "::" and not "0.0.0.0": the server has a public IPv6 address and the
+    # name of the domain resolves to it, so a client that tries IPv6 first
+    # would be refused.  As long as net.ipv6.bindv6only is 0 (the default),
+    # a socket on :: takes the IPv4 connections as well.
     if [ "$(_icecast_expose_port_enabled)" = "true" ]; then
-        echo "0.0.0.0"
+        echo "::"
     else
-        echo "127.0.0.1"
+        echo "::1"
     fi
 }
 
@@ -95,7 +100,7 @@ _icecast_current_bind_address() {
         local address
         address="$(sed -n 's|.*<bind-address>\([^<]*\)</bind-address>.*|\1|p' \
             "$icecast_config_file" | head -1)"
-        if [ "$address" = "0.0.0.0" ]; then
+        if [ "$address" = "::" ]; then
             echo "true"
         else
             echo "false"

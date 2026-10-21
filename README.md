@@ -38,11 +38,20 @@ That password is used for the source (the Mopidy publisher), the relay and
 the admin panel.  **The Mopidy app has to be configured with the same
 value**, otherwise the streams stay silent.
 
-## The landing page
+## The landing page and the player
 
-`https://<domain>/` shows a small page with the two links to the streams.
-It replaces the status page of Icecast, which is still there on the port of
-the server (`http://<domain>:<port>/`).
+`https://<domain>/` sends the visitor to `http://<domain>:<port>/`, where
+Icecast serves a small page with a player and the two links to the streams.
+
+The player has to live on a page that is served over plain HTTP: the
+reverse proxy of the domain sends `Content-Security-Policy:
+upgrade-insecure-requests`, which turns an `http://` audio source into an
+`https://` one - and the port of Icecast has no certificate, so the player
+would not play at all.  The page is therefore served by Icecast itself, and
+the address of the player is relative, so it keeps the protocol of the page.
+
+The status page of Icecast is still on the port of the server
+(`http://<domain>:<port>/status.xsl`).
 
 ## Where to listen
 

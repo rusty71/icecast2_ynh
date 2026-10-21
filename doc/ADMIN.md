@@ -10,12 +10,18 @@
 The URLs are `https://<domain><path>/low.mp3` and
 `https://<domain><path>/high.ogg`, with `<path>` being `/icecast` by default.
 
-## The landing page
+## The landing page and the player
 
-The domain of the app (`https://<domain>/`) shows a small page with the two
-links to the streams.  It is written by the package to
-`/etc/icecast2/landing.html` and served by nginx; the status page of
-Icecast is still on the port of the server.
+The domain of the app (`https://<domain>/`) sends the visitor to
+`http://<domain>:<port>/`, where Icecast serves a small page with a player
+and the two links to the streams.
+
+The page is written by the package to `/usr/share/icecast2/web/landing.html`
+and the alias of `/` in `icecast.xml` points at it.  It has to be served
+over plain HTTP: the reverse proxy sends `upgrade-insecure-requests`, which
+would turn the address of the player into an https one, and the port has no
+certificate.  The status page of Icecast is still on
+`http://<domain>:<port>/status.xsl`.
 
 ## The two ways to listen
 

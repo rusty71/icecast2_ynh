@@ -5,6 +5,13 @@ version = "1.0"
     [main.streaming]
     name = "Streaming"
 
+        [main.streaming.public_port]
+        ask.en = "Port the listeners use"
+        ask.fr = "Port utilise par les auditeurs"
+        help.en = "The port that is forwarded to this server from the outside. It is the port in the addresses of the streams."
+        type = "number"
+        bind = "null"
+
         [main.streaming.streaming_expose_port]
         ask.en = "Open the streaming port on the server?"
         ask.fr = "Ouvrir le port de streaming sur le serveur ?"

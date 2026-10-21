@@ -18,6 +18,25 @@ icecast_config="$icecast_config_file"
 # GETTERS
 #=================================================
 
+get__streaming_public_port() {
+    sed -n 's|.*return 302 https://\([^:]*\):\([0-9]*\)/.*|\2|p' \
+        /etc/nginx/conf.d/"$domain".d/"$app".conf | head -1
+}
+
+set__streaming_public_port() {
+    if [ -z "$streaming_public_port" ]; then
+        ynh_print_info "The public port was left unchanged"
+        return
+    fi
+
+    ynh_print_info "The streams are on port $streaming_public_port"
+
+    sed -i "s|return 302 https://\([^:]*\):[0-9]*/|return 302 https://\1:$streaming_public_port/|" \
+        /etc/nginx/conf.d/"$domain".d/"$app".conf
+
+    ynh_systemctl --service=nginx --action=reload
+}
+
 get__streaming_expose_port() {
     _icecast_current_bind_address
 }

@@ -102,4 +102,20 @@
         <fallback-override>1</fallback-override>
     </mount>
 
+
+    <security>
+        <chroot>false</chroot>
+
+        <!-- The port speaks https, with the certificate of the domain.
+             A browser that insists on https ("HTTPS-First mode") would
+             otherwise try to reach the port over https and hang, because
+             there is no certificate for it.  The certificate is for the
+             name of the domain, not for the port, so it works either way.
+             The service reads the key as a member of the group ssl-cert. -->
+        <tls-context>
+            <tls-certificate>/etc/yunohost/certs/__DOMAIN__/crt.pem</tls-certificate>
+            <tls-key>/etc/yunohost/certs/__DOMAIN__/key.pem</tls-key>
+        </tls-context>
+    </security>
+
 </icecast>

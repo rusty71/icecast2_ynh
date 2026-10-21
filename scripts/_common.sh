@@ -70,11 +70,11 @@ _icecast_disable_debian_service() {
 
 _icecast_deploy_landing_page() {
     # The page with the player.  It is served by Icecast itself, on its
-    # port: the reverse proxy of the domain sends
-    # "upgrade-insecure-requests", which would turn the address of the
-    # player into an https one, and the port has no certificate.
+    # port, so the player talks to the streams directly and not through
+    # the reverse proxy of the domain.
     local webroot="/usr/share/icecast2/web"
 
+    public_port="${public_port:-$port}"
     mkdir -p "$webroot"
     ynh_config_add --template="landing.html" --destination="$webroot/landing.html"
     chmod 644 "$webroot/landing.html"

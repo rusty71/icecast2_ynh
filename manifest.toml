@@ -7,7 +7,7 @@ name = "Icecast2"
 description.en = "Streaming server for the Mopidy + Qobuz stack (MP3 and lossless FLAC mounts)"
 description.fr = "Serveur de streaming pour la pile Mopidy + Qobuz (flux MP3 et FLAC lossless)"
 
-version = "2.4.4~ynh7"
+version = "2.4.4~ynh8"
 
 maintainers = ["rusty71"]
 
@@ -49,6 +49,12 @@ ram.runtime = "50M"
     ask.en = "Password of the Icecast admin (and of the streaming source)"
     help.en = "The Mopidy app has to use the same password to publish on the mounts."
     type = "password"
+
+    [install.public_port]
+    ask.en = "Port the listeners use"
+    help.en = "The port that is forwarded to this server from the outside. It is the port in the addresses of the streams."
+    type = "number"
+    default = 8000
 
     [install.expose_port]
     ask.en = "Open the streaming port on the server?"

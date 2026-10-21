@@ -32,6 +32,15 @@ _icecast_prepare_mime_types() {
     # Map .ogg to application/ogg
     sed -i 's|^audio/ogg\(.*\)$|application/ogg\1|' "$destination"
 
+    # A playlist is served as a plain file: a browser that knows the type
+    # would try to play it in the page instead of handing it to the
+    # application of the user.
+    sed -i 's|^\(audio/x-mpegurl\|application/x-mpegurl\|application/vnd.apple.mpegurl\).*|application/octet-stream m3u|' \
+        "$destination"
+    if ! grep -q "octet-stream m3u" "$destination"; then
+        printf 'application/octet-stream m3u\n' >> "$destination"
+    fi
+
     if ! grep -q "^application/ogg" "$destination"; then
         printf 'application/ogg oga ogg opus spx\n' >> "$destination"
     fi

@@ -1,2 +1,6 @@
-Icecast is a streaming media (audio/video) server which currently supports Ogg (Vorbis and Theora), Opus, WebM and MP3 streams.
-It can be used to create an Internet radio station or a privately running jukebox and many things in between. It is very versatile in that new formats can be added relatively easily and supports open standards for communication and interaction.
+Icecast is a streaming media server. This package is configured for the
+Mopidy + Qobuz stack: it publishes two parallel streams of the same playback,
+a small MP3 stream and a lossless high resolution stream, and keeps them
+alive with silent fallbacks while Mopidy changes track.
+
+Install it together with the Mopidy app, which feeds it.

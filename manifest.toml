@@ -4,12 +4,12 @@ packaging_format = 2
 
 id = "icecast2"
 name = "Icecast2"
-description.en = "Server for streaming multimedia"
-description.fr = "Serveur de streaming multimédia"
+description.en = "Streaming server for the Mopidy + Qobuz stack (MP3 and lossless FLAC mounts)"
+description.fr = "Serveur de streaming pour la pile Mopidy + Qobuz (flux MP3 et FLAC lossless)"
 
-version = "2.4.4~ynh1"
+version = "2.4.4~ynh2"
 
-maintainers = ["eric-G"]
+maintainers = ["rusty71"]
 
 [upstream]
 license = "GPL-2.0"
@@ -34,6 +34,10 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
+    [install.path]
+    type = "path"
+    default = "/icecast"
+
     [install.init_main_permission]
     type = "group"
     default = "visitors"
@@ -42,6 +46,8 @@ ram.runtime = "50M"
     type = "user"
 
     [install.password]
+    ask.en = "Password of the Icecast admin (and of the streaming source)"
+    help.en = "The Mopidy app has to use the same password to publish on the mounts."
     type = "password"
 
 [resources]
@@ -53,6 +59,9 @@ ram.runtime = "50M"
 
     [resources.ports]
     main.default = 8000
-    
+
     [resources.apt]
-    packages = "icecast2"
+    packages = [
+        "icecast2",
+        "ffmpeg",
+    ]

@@ -3,44 +3,54 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-
-ynh_app_setting_set --key=password --value="$password"
-
 #=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
+# INITIALIZE AND STORE SETTINGS
 #=================================================
 
-chown $app: /var/log/$app
+#=================================================
+# APP "BUILD" (DEPLOYING SOURCES, VENV, COMPILING ETC)
+#=================================================
+
+ynh_script_progression "Preparing the mime types..."
+
+_icecast_prepare_mime_types
+
+ynh_script_progression "Generating the fallback streams..."
+
+_icecast_make_fallbacks
 
 #=================================================
-# APP INITIAL CONFIGURATION
+# APP CONFIGURATION
 #=================================================
 ynh_script_progression "Adding $app's configuration files..."
+
+mkdir -p "/var/log/$app"
+chown "$app:" "/var/log/$app"
 
 ynh_config_add --template="icecast.xml" --destination="/etc/icecast2/icecast.xml"
 
 chmod 400 "/etc/icecast2/icecast.xml"
 chown "$app:$app" "/etc/icecast2/icecast.xml"
 
-echo 'ENABLE=true' >> /etc/default/icecast2
-
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
 ynh_script_progression "Adding system configurations related to $app..."
 
+_icecast_disable_debian_service
+
 ynh_config_add_nginx
 
 ynh_config_add_systemd
 
-yunohost service add "$app" --description="Server for streaming multimedia" --log="/var/log/$app/$app.log"
+yunohost service add "$app" --description="Streaming server (MP3 and lossless FLAC)" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemctl --service="$app" --action="start"
+ynh_systemctl --service="$app" --action="start" --log_path="systemd"
 
 #=================================================
 # END OF SCRIPT

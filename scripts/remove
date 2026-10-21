@@ -4,6 +4,13 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
+# STOP SYSTEMD SERVICE
+#=================================================
+ynh_script_progression "Stopping $app's systemd service..."
+
+ynh_systemctl --service="$app" --action="stop"
+
+#=================================================
 # REMOVE SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression "Removing system configurations related to $app..."
@@ -14,6 +21,8 @@ fi
 ynh_config_remove_systemd
 
 ynh_config_remove_nginx
+
+ynh_safe_rm "/etc/icecast2/mime.types.ynh"
 
 #=================================================
 # END OF SCRIPT
